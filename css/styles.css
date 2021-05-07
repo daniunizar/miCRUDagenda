@@ -1,0 +1,74 @@
+
+body{
+    background-color: lightyellow;
+}
+h1{
+    text-align: center;
+    font-family: 'Pacifico', cursive;
+}
+table{
+    border: 5px, solid, black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td{
+    border: 1px solid black;
+    font-family: 'Pacifico', cursive;
+}
+
+th{
+    background-color: lightslategray;
+}
+td{
+    cursor: pointer;
+}
+
+#contenedor{/*Contiene la tabla con los Contactos*/
+    width: 50%;
+    float:left;
+    background-color: aquamarine;
+    min-height: 500px;
+}
+#herramientas{/*Contiene los botones: Agregar, Editar, Eliminar*/
+    width: 50%;
+    float:left;
+    background-color:khaki;
+    min-height: 500px;
+}
+#herramientas input{
+    width: 30%;
+    font-family: 'Pacifico', cursive;
+    font-weight: bold;
+}
+
+.formulario{/*Los Formularios de Inserción y Edición*/
+    clear: right;
+    width: 50%;
+    background-color:azure;
+}
+
+.registro:hover{ /*Cada registro de la tabla de contactos*/
+    background-color:greenyellow;
+    /*-webkit-transform: scale(1.2);*/
+    transform: scale(1.2);
+
+}
+
+.seleccionado{ /*El registro TR que tenga la clase seleccionado*/
+    background-color: salmon;
+}
+
+.seleccionado:hover{ /*El registro que tenga la clase seleccionado y además tenga el cursor sobre él*/
+    background-color: salmon;
+}
+
+@font-face{
+    font-family: 'Pacifico', cursive;
+    src: url(./fonts/Pacifico/Pacifico-Regular.ttf);
+  }
+  
+  .campo_formulario_insercion{
+      width: 100%;
+      
+  }

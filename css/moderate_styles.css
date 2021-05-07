@@ -1,0 +1,22 @@
+td{
+    cursor: pointer;
+}
+
+tr:hover{
+    background-color:khaki;
+}
+
+
+.seleccionado{ /*El registro TR que tenga la clase seleccionado*/
+    background-color:khaki;
+}
+
+.seleccionado:hover{ /*El registro que tenga la clase seleccionado y además tenga el cursor sobre él*/
+    background-color: khaki;
+}
+
+@font-face{
+    font-family: 'Pacifico', cursive;
+    src: url(./fonts/Pacifico/Pacifico-Regular.ttf);
+  }
+  

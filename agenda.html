@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!--Requerido para bootstrap justo debajo-->
+    <!--BOOTSTRAP DE CSS.- Requiere del viewport que hay justo encima-->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+    <!--Bootstrap enlace rápido-->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous"> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="css/moderate_styles.css">
+    <!--FIN BOOTSTRAP DE jquery y javascript-->
+    <!--<link rel="stylesheet" href="css/styles.css">-->
+    <!--ICONOS-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <title>Mi Agenda</title>
+</head>
+<body>
+    <!--FORMULARIO-->  
+    <div class="container">
+        <div id="contenedor">
+            <!--Muestra los contactos existentes-->
+            <table id="tabla_contactos" class="table table-striped table-hover">
+            </table>
+            <input type="hidden" id="campo_seleccionado" value=""><!--Campo clave. Su valor se rellena con el valor de la primera celda de la fila a la que pertenece la celda sobre la que clicke el usuario en la tabla de contactos. Ese valor es la ID de un registro. NECESARIA para la edición y eliminación de registros. Su valor se rellena con el método: 'detectarSeleccionado()'-->
+        </div>
+        <div id="herramientas"><!--Contiene los botones que muestran los formularios de inserción y edición de contactos, así como el botón que permite eliminar un contacto seleccionado-->
+            <!--Botones-->
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#formulario_modal_insertar">
+              Agregar Nuevo Contacto <i class="fa fa-address-book"></i>
+            </button>
+            
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#formulario_modal_editar">
+              Editar Contacto <i class="fa fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#formulario_modal_eliminar">
+              Eliminar Contacto <i class="fa fa-trash"></i>
+            </button>
+            <!-- <input type="button" value="Agregar Contacto" onclick="mostrar_formulario_insercion();" id="btn_mostrar_formInsercion" class="btn btn-primary">
+            <input type="button" value="Editar Contacto" onclick="mostrar_formulario_edicion();" id="btn_mostrar_formEdicion" class="btn btn-primary"> -->
+            <!-- <input type="button" value="Eliminar Contacto" onclick="eliminar_contacto();" id="btn_eliminarContacto" class="btn btn-primary"> -->
+            <!--Contenedor del formulario de inserción de nuevo contacto-->
+            <!-- <div id="formulario_insercion" class="formulario" hidden="true">
+                <h2>Nuevo Contacto</h2>
+                <table>
+                    <div class="input-group">
+                        <label for="campo_nombre" class="form-label">Nombre:<input type="text" id="campo_nombre" name="campo_nombre" maxlength="25" class="form-control"></label><br/>
+                    </div>
+                    <div class="input-group">
+                        <label for="campo_apellido" class="form-label">Apellido:<input type="text" id="campo_apellido" name="campo_apellido" maxlength="25" class="form-control"></label><br/>
+                    </div>
+                    <div class="input-group">
+                        <label for="campo_tlf" class="form-label">Tlf:<input type="text" id="campo_tlf" name="campo_tlf" minlength="9" maxlength="9" class="form-control"></label><br/>
+                    </div>
+                </table>
+                <input type="button" value="Agrega Nuevo Contacto" onclick="insertarContacto();" class="btn-success">
+            </div> -->
+            <!--Contenedor del formulario de edición de un contacto-->
+            <!-- <div id="formulario_edicion" class="formulario" hidden="true">
+                <h2>Editar Contacto</h2>
+                <label for="campo_nombre_ed" class="form-label">Nombre:<input type="text" id="campo_nombre_ed" name="campo_nombre_ed" maxlength="25" class="form-control"></label><br/>
+                <label for="campo_apellido_ed" class="form-label">Apellido:<input type="text" id="campo_apellido_ed" name="campo_apellido_ed" maxlength="25" class="form-control"></label><br/>
+                <label for="campo_tlf_ed" class="form-label">Tlf:<input type="text" id="campo_tlf_ed" name="campo_tlf_ed" minlength="9" maxlength="9" class="form-control"></label><br/>
+                <input type="button" value="Editar Contacto" onclick="editar_contacto();" class="btn-success">
+            </div> -->
+        </div>
+        <!--AVISOS MODALES-->
+        <div id="avisos"> <!--Contiene los avisos de éxito de inserción, actualización o borrado-->
+            <div class="modal" tabindex="-1" id="modal_insercion">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Info</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body alert alert-success">
+                      <p>Nuevo contacto agregado.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn alert alert-primary" data-bs-dismiss="modal">Ok</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="modal" tabindex="-1" id="modal_edicion">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Info</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body alert alert-success">
+                      <p>Contacto editado con éxito.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn alert alert-primary" data-bs-dismiss="modal">Ok</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="modal" tabindex="-1" id="modal_eliminacion">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Info</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body alert alert-success">
+                      <p>Contacto eliminado con éxito.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn alert alert-primary" data-bs-dismiss="modal">Ok</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+
+<!--FORMULARIOS MODALES-->
+
+  
+  <!-- Modal Insertar -->
+  <div class="modal fade" id="formulario_modal_insertar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Nuevo Contacto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="formulario_insercion" class="formulario">
+                <h2>Nuevo Contacto</h2>
+                    <div class="input-group">
+                        <label for="campo_nombre" class="form-label">Nombre:<input type="text" id="campo_nombre" name="campo_nombre" maxlength="25" class="form-control"></label><br/>
+                    </div>
+                    <div class="input-group">
+                        <label for="campo_apellido" class="form-label">Apellido:<input type="text" id="campo_apellido" name="campo_apellido" maxlength="25" class="form-control"></label><br/>
+                    </div>
+                    <div class="input-group">
+                        <label for="campo_tlf" class="form-label">Tlf:<input type="text" id="campo_tlf" name="campo_tlf" minlength="9" maxlength="9" class="form-control"></label><br/>
+                    </div>
+                <!--<input type="button" value="Agrega Nuevo Contacto" onclick="insertarContacto();" class="btn-success">-->
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" onclick="insertarContacto()" data-bs-dismiss="modal">Agregar Contacto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- FIN Modal Insertar -->
+
+<!-- Modal Editar -->
+
+  
+<div class="modal fade" id="formulario_modal_editar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Editar Contacto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="formulario_edicion" class="formulario">
+                <h2>Editar Contacto</h2>
+                <label for="campo_nombre_ed" class="form-label">Nombre:<input type="text" id="campo_nombre_ed" name="campo_nombre_ed" maxlength="25" class="form-control"></label><br/>
+                <label for="campo_apellido_ed" class="form-label">Apellido:<input type="text" id="campo_apellido_ed" name="campo_apellido_ed" maxlength="25" class="form-control"></label><br/>
+                <label for="campo_tlf_ed" class="form-label">Tlf:<input type="text" id="campo_tlf_ed" name="campo_tlf_ed" minlength="9" maxlength="9" class="form-control"></label><br/>
+                <!--<input type="button" value="Editar Contacto" onclick="editar_contacto();" class="btn-success">-->
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" onclick="editar_contacto()" data-bs-dismiss="modal">Editar Contacto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- FIN Modal Editar -->
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="formulario_modal_eliminar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Eliminar Contacto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body alert alert-danger">
+            <div id="formulario_eliminacion" class="formulario">
+                <h2>Eliminar Contacto</h2>
+                El contacto se eliminará de su base de datos. ¿Desea continuar?
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" onclick="eliminar_contacto()" data-bs-dismiss="modal">Eliminar Contacto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- FIN Modal Eliminar -->
+
+<!-- Modal Editar -->
+    </div>
+    <script>
+        /*FUNCIONES AUTOCARGADAS
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        */
+        mostrarContactos(); //Nada más cargar la página mostramos los contactos existentes en una tabla HTML.
+        anadirListenerTablaContactos(); //También añadimos el listener de tipo click que permite identificar la fila seleccionada de cada tabla (Y extraer sus datos como el ID o el resto de campos para autocompletar, por ejemplo, el formuilario de edición).
+
+        /*MANTENIMIENTO DE LA PÁGINA
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /*
+
+        /**
+         * Esta función hace visible el formulario de inserción, oculto por defecto.
+         * También lo oculta en caso de que estuviera ya visible, y en caso de que se quiera hacer visible el formulario de edición, evitando tener los dos activos al mismo tiempo. 
+         */
+        function mostrar_formulario_insercion(){
+            var formularioInsercion = document.getElementById("formulario_insercion");
+            var botonFomularioInsercion = document.getElementById("btn_mostrar_formInsercion");
+            //cuando mostramos el de inserción, si el de edición está abierto lo cerramos
+            var formularioEdicion = document.getElementById("formulario_edicion");
+            if(formularioEdicion.hidden==false){
+                mostrar_formulario_edicion();
+            }
+            ///Y ahora continuamos con el de inserción
+            if(formularioInsercion.hidden==true){
+                formularioInsercion.hidden=false;
+                botonFomularioInsercion.value="Ocultar Formulario de Nuevo Contacto";
+            }else{
+                limpiaFormularioInsercion();
+                formularioInsercion.hidden=true;
+                botonFomularioInsercion.value="Agregar Contacto";
+            }
+        }
+
+        /**
+         * Esta función hace visible el formulario de edición, oculto por defecto.
+         * También lo oculta en caso de que estuviera ya visible, y en caso de que se quiera hacer visible el formulario de inserción, evitando tener los dos activos al mismo tiempo. 
+         */
+        function mostrar_formulario_edicion(){
+            var formularioEdicion = document.getElementById("formulario_edicion");
+            var botonFomularioEdicion = document.getElementById("btn_mostrar_formEdicion");
+            //Cuando mostramos el de edición, si el de inserción está activo lo ocultamos
+            var formularioInsercion = document.getElementById("formulario_insercion");
+            if(formularioInsercion.hidden==false){mostrar_formulario_insercion()}
+            //Y ahora continuamos con el de edición
+            if(formularioEdicion.hidden==true){
+                formularioEdicion.hidden=false;
+                botonFomularioEdicion.value="Ocultar Formulario de Edición";
+                //rellenamos los valores actuales del contacto
+                var campo_nombre_ed = document.getElementById("campo_nombre_ed");
+                var campo_apellido_ed = document.getElementById("campo_apellido_ed");
+                var campo_tlf_ed = document.getElementById("campo_tlf_ed");
+                //info del seleccionado
+                var id_seleccionado = document.getElementById("campo_seleccionado").value;
+                //buscamos los datos del seleccionado
+
+            }else{
+                //limpiaFormularioEdicion(); Lo comentamos para dejar el formulario como lo tengamos en el momento de editar.
+                formularioEdicion.hidden=true;
+                botonFomularioEdicion.value="Editar Contacto";
+            }
+        }
+
+        /**
+         * Esta función limpia los campos del formulario de Inserción.
+         * Útil para resetearlo cuando el formulario se cierra, o tras una inserción exitosa. 
+         */
+         function limpiaFormularioInsercion(){
+            let campo_nombre = document.getElementById("campo_nombre");
+            let campo_apellido = document.getElementById("campo_apellido");
+            let campo_tlf = document.getElementById("campo_tlf");
+            campo_nombre.value="";
+            campo_apellido.value="";
+            campo_tlf.value="";
+        }
+
+        /**
+         * Esta función limpia los campos del formulario de Edición.
+         * Útil para resetearlo cuando el formulario se cierra, o tras una edición exitosa. 
+         */
+        function limpiaFormularioEdicion(){
+            let campo_nombre_ed = document.getElementById("campo_nombre_ed");
+            let campo_apellido_ed = document.getElementById("campo_apellido_ed");
+            let campo_tlf_ed = document.getElementById("campo_tlf_ed");
+            campo_nombre_ed.value="";
+            campo_apellido_ed.value="";
+            campo_tlf_ed.value="";
+        }
+
+         /**
+         *  Esta función crea en la tabla que contendrá los contactos un listener de eventos de tipo click, que permitirá detectar el registro seleccionado por el usuario. 
+         */
+         function anadirListenerTablaContactos(){
+            var tablaContactos = document.getElementById("tabla_contactos");
+            tablaContactos.addEventListener("click", (e)=>{detectarSeleccionado(e)});
+        }
+        /**
+         *  Esta función permite detectar el registro seleccionado por el usuario en la tabla de contactos. (Aunque en verdad es genérica y puede reutilizarse en otros elementos).
+         *  Del click del usuario en la tabla obtenemos la celda (TD);
+         *  De ella extraemos el elemento padre, que es la fila (TR);
+         *  De la fila extraemos la array de elementos hijos o children (Totas las TD de esta TR);
+         *  De esa array de TD extraemos la información de la primera (FIRST CHILD) para tener la ID del contacto seleccionado para su edición o borrado,
+         *  Y mediante su posición (array_filas[1], array_filas[2]...) el resto de campos para su edición.
+         */
+        function detectarSeleccionado(e){
+            var seleccionado = e.target;//Cogemos la celda seleccionada
+            //console.log(seleccionado);
+            //console.log(seleccionado.value);
+            var fila = seleccionado.parentElement;//Y buscamos la fila a la que pertenece
+            //console.log("padre:"+fila);
+            var hijos = fila.children;//Hacemos una array con los hijos de esa fila
+            //console.log(hijos[0]);
+            var primerHijo = fila.firstElementChild;//Y extraemos el primero de ellos, que contiene el id
+            //console.log(primerHijo);
+            if (primerHijo.nodeName == "TD"){
+            //console.log("Es un td");
+            //console.log(primerHijo.innerHTML);
+            var tbody = fila.parentElement;
+            var array_filas = tbody.children;
+            //Despintamos todas las líneas
+            for(var i=0; i<array_filas.length; i++){
+                array_filas[i].classList.remove("seleccionado");
+            }
+            //Pintamos la seleccionada
+            fila.classList.toggle("seleccionado");
+            //recuperamos el id del hijo para la consulta
+            var campo_seleccionado = document.getElementById("campo_seleccionado");
+            campo_seleccionado.value=primerHijo.innerHTML;//PROCESO CLAVE: Cuando seleccionamos un registro de la tabla, la ID de ese contacto se guarda en el campo oculto 'campo_seleccioado', permitiendo recuperarla para operaciones como edición o eliminado de ese contacto.
+            // Creamos variables que se corresponden con los campos del formulario de edición.
+            var campo_nombre_ed = document.getElementById("campo_nombre_ed");
+            var campo_apellido_ed = document.getElementById("campo_apellido_ed");
+            var campo_tlf_ed = document.getElementById("campo_tlf_ed");
+            //Asignamos a las variables nombre, apellido y tlf del formulario de edición los valores de las correspondientes celdas del contacto seleccionado.
+            campo_nombre_ed.value=hijos[2].innerHTML;
+            campo_apellido_ed.value=hijos[1].innerHTML;
+            campo_tlf_ed.value=hijos[3].innerHTML;
+            }
+        }
+        
+        /*CRUD: CREATE - READ - UPDATE - DELETE
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /*
+
+        /**
+         *  Esta función recupera mediante Ajax los registros existentes en la tabla Contactos de la BBDD y los muestra en forma de tabla HTML.
+         *  Esa tabla está afectada además con un listener que captura eventos click para averiguar qué registro está siendo pulsado para su edición o borrado. 
+         */
+         function mostrarContactos(){
+            const xhttp = new XMLHttpRequest(); //Creamos el objeto ajax
+            xhttp.onreadystatechange = function(){//Cuando ese objeto cambie de estado, haremos lo que introduzcamos en esta función anónima
+                //Como el cambio no tiene por qué ser a nuestro favor, debemos comprobar que recuperamos un 4 y un 200
+                if(this.readyState == 4 && this.status ==200){ //Si la conexión ha sido un éxito...
+                    document.getElementById("tabla_contactos").innerHTML=this.responseText;//Insertamos los valores recuperados (Una echo de php) en el interior de este div y a su vez en un párrafo
+                }else{//Si hemos fallado en la conexión y recuperación de esa información
+                    //document.getElementById("contenedor").innerHTML="<p>Ha habido un error, esperábamos respuesta 4-200 y hemos recibido "+this.readyState+" - "+this.status+"</p>";
+                }
+            };
+            xhttp.open("GET", "http://localhost/ajax/agenda3/miphp.php?funcion_solicitada=3", true); //Recibe el método (post o get), la url del fichero a recuperar y true o false a la pregunta de si queremos que sea asínscrono. Si no es asíncrono no es AJAX
+            xhttp.send(null);
+        }
+
+        /**
+         * Esta función envía mediante Ajax una url al documento miphp.php con la orden de insertar un nuevo contacto y los datos de esa inserción.
+         * Recupera y muestra los registros de la tabla 'contactos' con el nuevo añadido, de forma que mantiene actualizada la lista de contactos sin refrescar la página. 
+         */
+        function insertarContacto(){
+            var nombre = document.getElementById("campo_nombre").value;
+            var apellido = document.getElementById("campo_apellido").value;
+            var tlf = document.getElementById("campo_tlf").value;
+            var url="http://localhost/ajax/agenda3/miphp.php?funcion_solicitada=0&nombre="+nombre+"&apellido="+apellido+"&tlf="+tlf;
+            const xhttp = new XMLHttpRequest(); //Creamos el objeto ajax
+            xhttp.onreadystatechange = function(){//Cuando ese objeto cambie de estado, haremos lo que introduzcamos en esta función anónima
+                //Como el cambio no tiene por qué ser a nuestro favor, debemos comprobar que recuperamos un 4 y un 200
+                if(this.readyState == 4 && this.status ==200){ //Si la conexión ha sido un éxito...
+                    document.getElementById("tabla_contactos").innerHTML=this.responseText;//Insertamos los valores recuperados (Una echo de php) en el interior de este div y a su vez en un párrafo
+                }else{//Si hemos fallado en la conexión y recuperación de esa información
+                    //document.getElementById("contenedor").innerHTML="<p>Ha habido un error, esperábamos respuesta 4-200 y hemos recibido "+this.readyState+" - "+this.status+"</p>";
+                }
+            };
+            xhttp.open("GET", url, true); //Recibe el método (post o get), la url del fichero a recuperar y true o false a la pregunta de si queremos que sea asínscrono. Si no es asíncrono no es AJAX
+            xhttp.send(null);
+            //limpiaFormularioInsercion();
+            var modal_insercion = document.getElementById("modal_insercion");
+            $("#modal_insercion").modal("show");
+        }
+
+        /**
+         *  Esta función envía por Ajax en la url al documento miphp.php la instrucción de editar un contacto, y la id y la información de los campos para esa edición.
+         *  El id para la edición lo extrae del campo oculto campo_seleccionado, el cual se rellena con el ID del último elemento clicado de la tabla de contactos.
+         *  El resto de la información de edición (nombre, apellido, tlf) la extrae de los valores de los campos del formulario de edición. 
+         */
+        function editar_contacto(){
+            var id = document.getElementById("campo_seleccionado").value;
+            var nombre = document.getElementById("campo_nombre_ed").value;
+            var apellido = document.getElementById("campo_apellido_ed").value;
+            var tlf = document.getElementById("campo_tlf_ed").value;
+            var url="http://localhost/ajax/agenda3/miphp.php?funcion_solicitada=1&id="+id+"&nombre="+nombre+"&apellido="+apellido+"&tlf="+tlf;
+            const xhttp = new XMLHttpRequest(); //Creamos el objeto ajax
+            xhttp.onreadystatechange = function(){//Cuando ese objeto cambie de estado, haremos lo que introduzcamos en esta función anónima
+                //Como el cambio no tiene por qué ser a nuestro favor, debemos comprobar que recuperamos un 4 y un 200
+                if(this.readyState == 4 && this.status ==200){ //Si la conexión ha sido un éxito...
+                    document.getElementById("tabla_contactos").innerHTML=this.responseText;//Insertamos los valores recuperados (Una echo de php) en el interior de este div y a su vez en un párrafo
+                }else{//Si hemos fallado en la conexión y recuperación de esa información
+                   // document.getElementById("contenedor").innerHTML="<p>Ha habido un error, esperábamos respuesta 4-200 y hemos recibido "+this.readyState+" - "+this.status+"</p>";
+                }
+            };
+            xhttp.open("GET", url, true); //Recibe el método (post o get), la url del fichero a recuperar y true o false a la pregunta de si queremos que sea asínscrono. Si no es asíncrono no es AJAX
+            xhttp.send(null);
+            // document.getElementById("formulario_modal_editar").toggle();
+            // document.getElementById("formulario_modal_editar").hide();
+            $("#modal_edicion").modal("show");
+            limpiaFormularioEdicion();
+            
+        }
+
+        /**
+         * Esta función envía mediante Ajax al documento miphp.php la instrucción de eliminar un registro de la tabla contactos.
+         * La ID de ese registro la extrae del campo oculto 'campo_seleccionado', cuyo valor se rellena con el ID del último elemento seleccionado de la tabla de contactos.
+         */ 
+        function eliminar_contacto(){
+            var id_eliminar = document.getElementById("campo_seleccionado").value;
+            const xhttp = new XMLHttpRequest(); //Creamos el objeto ajax
+            xhttp.onreadystatechange = function(){//Cuando ese objeto cambie de estado, haremos lo que introduzcamos en esta función anónima
+                //Como el cambio no tiene por qué ser a nuestro favor, debemos comprobar que recuperamos un 4 y un 200
+                if(this.readyState == 4 && this.status ==200){ //Si la conexión ha sido un éxito...
+                    document.getElementById("tabla_contactos").innerHTML=this.responseText;//Insertamos los valores recuperados (Una echo de php) en el interior de este div y a su vez en un párrafo
+                }else{//Si hemos fallado en la conexión y recuperación de esa información
+                    //document.getElementById("contenedor").innerHTML="<p>Ha habido un error, esperábamos respuesta 4-200 y hemos recibido "+this.readyState+" - "+this.status+"</p>";
+                }
+            };
+            xhttp.open("GET", "http://localhost/ajax/agenda3/miphp.php?funcion_solicitada=2&id="+id_eliminar, true); //Recibe el método (post o get), la url del fichero a recuperar y true o false a la pregunta de si queremos que sea asínscrono. Si no es asíncrono no es AJAX
+            xhttp.send(null);
+            $("#modal_eliminacion").modal("show");
+            limpiaFormularioInsercion();
+            limpiaFormularioEdicion();
+            
+        }
+
+        /*
+        SENTENCIAS SQL PARA LA GENERACIÓN DE LA TABLA CONTACTOS Y PARA LA INSERCIÓN DE SUS PRIMEROS REGISTROS.
+        ------------------------------------------------------------------------------------------------------
+        mysql:
+            CREATE TABLE CONTACTOS (
+                ID int NOT NULL AUTO_INCREMENT,
+                NOMBRE varchar(25),
+                APELLIDO varchar(25),
+                TLF varchar(9),    
+                PRIMARY KEY (ID)
+            );
+
+            INSERTAR VALORES: //el primer null alimenta el incremento autonumérico del ID
+            INSERT INTO CONTACTOS VALUES (null, "Harry", "Potter", "976111111");
+            INSERT INTO CONTACTOS VALUES (null, "Hermione", "Granger", "976222222");
+            INSERT INTO CONTACTOS VALUES (null, "Luna", "Lovegood", "976333333");
+        */
+    </script>
+    <!--BOOTSTRAP DE jquery y javascript-->
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!--FIN BOOTSTRAP DE jquery y javascript-->
+    <!--Script jquery formularios modales-->
+<script>
+//       $('#exampleModal').on('shown.bs.modal', function () {
+//     $('#mybtn').trigger('focus')
+//   })
+</script>
+    <!--Fin Script jquery formularios modales-->
+</body>
+</html>
